@@ -11,6 +11,8 @@ export default {
 
 	name: 'empty-region',
 
+	props: ['region'],
+
 	methods: {
 
 		...mapMutations([
@@ -21,7 +23,7 @@ export default {
 
 		addBlocks() {
 			this.updateInsertIndex(0);
-			this.updateInsertRegion(this.name);
+			this.updateInsertRegion(this.region);
 			this.showBlockPicker();
 		}
 	}

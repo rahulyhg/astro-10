@@ -11,7 +11,7 @@
 			:blockData="blockData"
 		/>
 	</template>
-	<empty-region v-else />
+	<empty-region :region="name" v-else />
 </div>
 </template>
 
