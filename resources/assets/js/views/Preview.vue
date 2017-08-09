@@ -19,7 +19,7 @@
 				</el-dropdown-menu>
 			</el-dropdown>
 
-			<div ref="move" class="block-overlay__move" v-show="blocks.length > 1">
+			<div ref="move" class="block-overlay__move">
 				<icon name="move" width="20" height="20" />
 			</div>
 			<div
@@ -92,11 +92,11 @@ export default {
 
 		...mapState({
 			loadedBlocks: state => state.page.loaded,
-			currentLayout: state => state.page.currentLayout,
+			currentLayout: state => state.page.pageData.layout_name,
 			currentRegion: state => state.page.currentRegion,
-			layoutVersion: state => state.page.currentLayoutVersion,
-			blockMeta: state => state.page.blockMeta.blocks[state.page.currentRegion],
-			blocks: state => state.page.pageData.blocks[state.page.currentRegion]
+			layoutVersion: state => state.page.pageData.layout_version,
+			blockMeta: state => state.page.blockMeta.blocks,
+			blocks: state => state.page.pageData.blocks
 		}),
 
 		...mapGetters([
@@ -114,7 +114,7 @@ export default {
 				layout = layouts[layoutName];
 
 			if(!layout) {
-				console.warn(`"${layoutName}" layout not found.`)
+				console.warn(`"${layoutName}" layout not found.`);
 			}
 
 			return layout || null;

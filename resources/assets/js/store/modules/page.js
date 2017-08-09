@@ -6,19 +6,13 @@ import { undoStackInstance } from 'plugins/undo-redo';
 import { eventBus } from 'plugins/eventbus';
 
 const state = {
-	currentLayout: null,
-	currentLayoutVersion: 1,
 	currentBlockIndex: null,
 	currentRegion: 'main',
-	blockMeta: {
-		blocks: {
-			main: []
-		}
-	},
 	pageData: {
-		blocks: {
-			main: []
-		}
+		blocks: {}
+	},
+	blockMeta: {
+		blocks: {}
 	},
 	pageName: '',
 	scale: .4,
@@ -28,17 +22,8 @@ const state = {
 
 const mutations = {
 
-	setPage(state, page) {
-		if(!page.blocks) {
-			page.blocks = {
-				main: []
-			};
-		}
-
-		state.currentLayout = page.layout_name;
-		state.currentLayoutVersion = page.layout_version;
-
-		state.pageData = page;
+	setPage(state, pageData) {
+		state.pageData = pageData;
 	},
 
 	setLoaded(state, loaded = true) {
@@ -58,6 +43,7 @@ const mutations = {
 	},
 
 	reorderBlocks(state, { from, to, value }) {
+		// TODO: set region
 		state.pageData.blocks[state.currentRegion].splice(from, 1);
 		state.pageData.blocks[state.currentRegion].splice(to, 0, value);
 
@@ -72,6 +58,7 @@ const mutations = {
 	},
 
 	updateFieldValue(state, { index, name, value }) {
+		// TODO: set region
 		let
 			idx = index !== void 0 ? index : state.currentBlockIndex,
 			fields = state.pageData.blocks[state.currentRegion][idx].fields;
@@ -89,6 +76,7 @@ const mutations = {
 	},
 
 	updateBlockMedia(state, { index, value }) {
+		// TODO: set region
 		let
 			idx = index !== void 0 ? index : state.currentBlockIndex,
 			blockData = state.pageData.blocks[state.currentRegion];
@@ -134,7 +122,7 @@ const mutations = {
 		state.pageData.blocks[region].splice(index, 0, block || {});
 	},
 
-	deleteBlock(state,  { region, index } = { region: 'main', index: null }) {
+	deleteBlock(state,  { region, index } = { region: null, index: null }) {
 		if(region === null) {
 			region = state.currentRegion;
 		}
@@ -181,13 +169,14 @@ const actions = {
 						}
 						else {
 							blocks = {};
+							page.blocks = {};
 						}
 
 						commit('setPage', _.cloneDeep(page));
 
 						Object.keys(blocks).forEach(region => {
 							blocks[region].forEach((block, index) => {
-								commit('addBlock', { region, index, block })
+								commit('addBlock', { region, index, block });
 							});
 						});
 
