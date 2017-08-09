@@ -120,9 +120,10 @@ export default {
 			currentIndex: state => state.page.currentBlockIndex,
 			currentRegion: state => state.page.currentRegion,
 			currentBlock: state => {
-				if(!state.page.pageData.blocks) {
+				if(!state.page.pageData.blocks || !state.page.currentRegion) {
 					return null;
 				}
+
 				return state.page.pageData.blocks[state.page.currentRegion][state.page.currentBlockIndex];
 			},
 
